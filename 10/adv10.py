@@ -1,20 +1,21 @@
-x_reg = 1
-clock = 1
-period = 40
-offset = 20
 sum_of_signal_strengths = 0
 
-with open('input10.txt') as instructions:
+def action(reg):
+	global sum_of_signal_strengths
+	if not hasattr(action,"clock"):
+		action.clock = 1
+		
+	if (action.clock+20)%40 == 0:
+		sum_of_signal_strengths += action.clock * reg
+	action.clock += 1
 
+
+with open('input10.txt') as instructions:
+	x_reg = 1
 	for cmd in instructions:
-		instr = cmd.strip('\n').split(' ')
-		if (clock+offset)%period == 0:
-			sum_of_signal_strengths += clock * x_reg
-		clock += 1
-		if instr[0] == 'addx':
-			if (clock+offset)%period == 0:
-				sum_of_signal_strengths += clock * x_reg
-			clock += 1
-			x_reg += int(instr[1])
+		action(x_reg)
+		if 'addx' in cmd:
+			action(x_reg)
+			x_reg += int(cmd.strip('\n').split(' ')[1])
 
 print(sum_of_signal_strengths)
